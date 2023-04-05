@@ -1,9 +1,9 @@
 # web-srv
 Python web app with 3 endpoints:
 
-/hello endpoint
-/user endpoint
-/metrics endpoint
+* '''/hello''' endpoint
+* /user endpoint
+* /metrics endpoint
 
 User endpoint accepts POST requests with a payload "user=xxx" and serves GET requests /user?name=xxx.
 /metrics endpoint provides Prometheus-compatible metrics on the user requests.
