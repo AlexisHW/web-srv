@@ -1,0 +1,82 @@
+namespace: web-srv
+replicaCount: 1
+
+image:
+  repository: alexishw/python
+  pullPolicy: IfNotPresent
+  tag: "web-srv-v0.2"
+  # If you put sqlite in args, the app will use sqlite to save log data
+  args: "sqlite"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations:
+  app: web-srv
+
+podSecurityContext:
+  fsGroup: 33
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  runAsNonRoot: true
+  runAsUser: 33
+
+containerPort: 5000
+
+livenessProbe:
+  httpGet:
+    path: /hello
+    port: http
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /hello
+    port: http
+  periodSeconds: 30
+
+service:
+  type: LoadBalancer
+  port: 80
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+volumes:
+- emptyDir:
+    medium: Memory
+    sizeLimit: 8Mi
+  name: tmp
+- persistentVolumeClaim:
+    claimName: web-srv-pvc
+  name: logs
+  
+pvcName: web-srv-pvc
+
+volumeMounts:
+- mountPath: /var/log
+  name: logs
+- mountPath: /tmp
+  name: tmp     
+
+nodeSelector:
+  kubernetes.io/hostname: kube-w1
+
+tolerations: []
+
+affinity: {}
+
+serviceMonitor:
+  enabled: false
+  extraLabels: {}
+  annotations: {}
+  relabelings: []

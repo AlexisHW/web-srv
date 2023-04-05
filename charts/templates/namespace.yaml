@@ -1,0 +1,8 @@
+{{- if .Values.namespace -}}
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    {{- include "web-srv.labels" . | nindent 4 }}
+  name: {{ .Values.namespace }}
+{{- end -}}
